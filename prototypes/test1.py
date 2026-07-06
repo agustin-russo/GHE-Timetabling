@@ -3,14 +3,15 @@ from time import perf_counter
 
 random.seed(11)
 
-from backtracking import Horario, Profesor, Asignacion, Stats, solve
+from backtracking import Disponibilidad, Horario, Profesor, Asignacion, Stats, solve, MRV_LCV
 
 
 def generar_asignaciones(n_profes=10, ocupacion=0.5):
-    curso1 = Horario()
-    curso2 = Horario()
+    dis = Disponibilidad()
+    curso1 = Horario(dis)
+    curso2 = Horario(dis)
 
-    TOTAL_SLOTS = curso1.dias * curso1.modulos
+    TOTAL_SLOTS = dis.dias * dis.modulos
     MODULOS_POR_CURSO = int(TOTAL_SLOTS * ocupacion)
 
     profesores = []
@@ -41,23 +42,27 @@ def generar_asignaciones(n_profes=10, ocupacion=0.5):
         asignaciones.append(Asignacion(i, profesores[i], curso1))
         asignaciones.append(Asignacion(i, profesores[i], curso2))
 
-        capacidad[i] -= 1
+        capacidad[i] -= 2
         restantes -= 1
 
     random.shuffle(asignaciones)
 
-    return curso1, curso2, asignaciones
+    return dis, curso1, curso2, asignaciones
 
 
 for i in range(1, 11):
     ocupacion =float(i) * 0.1
-    curso1, curso2, asignaciones = generar_asignaciones(ocupacion=ocupacion)
+    dis, curso1, curso2, asignaciones = generar_asignaciones(ocupacion=ocupacion)
+
+    for j in asignaciones:
+        j.measure_options()
+
 
     print(f"Instancia: \n - 2 cursos \n - 10 profesores \n - Ocupación = {ocupacion:.1f}")
-    print("Backtracking clásico")
+    print("Backtracking MRV y LCV")
     nodos = Stats()
     inicio = perf_counter()
-    solucion = solve(0, asignaciones, nodos)
+    solucion = MRV_LCV(asignaciones, nodos)
 
     fin = perf_counter()
 

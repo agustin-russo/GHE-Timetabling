@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="main">
+    <file>box.svg</file>
+  </qresource>
+  <qresource prefix="buttons"/>
+</RCC>

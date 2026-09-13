@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>799</width>
     <height>600</height>
    </rect>
   </property>
@@ -22,47 +22,105 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="ventana_cursos" native="true">
+      <widget class="QWidget" name="ventana_cursos">
        <attribute name="title">
         <string>Cursos</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="caja_seleccion_cursos">
           <property name="title">
            <string/>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QPushButton" name="b_agregar_curso">
+            <widget class="QPushButton" name="b_agregar_cursos">
              <property name="text">
               <string>Agregar Curso</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QListView" name="lista_cursos"/>
+            <widget class="QListWidget" name="lista_cursos"/>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QStackedWidget" name="datos_cursos">
-          <widget class="QWidget" name="page_3"/>
-          <widget class="QWidget" name="page_4"/>
+         <widget class="QGroupBox" name="caja_edicion_cursos">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QWidget" name="caja_nivel_cursos" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <widget class="QLabel" name="l_nivel">
+                <property name="text">
+                 <string>Nivel</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_nivel"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="caja_grado_cursos" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="l_grado">
+                <property name="text">
+                 <string>Grado/Año</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_grado"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="caja_division_cursos" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <item>
+               <widget class="QLabel" name="l_division">
+                <property name="text">
+                 <string>División</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_division"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="b_guardar_cursos">
+             <property name="text">
+              <string>Guardar</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="ventana_profesores" native="true">
+      <widget class="QWidget" name="ventana_profesores">
        <attribute name="title">
         <string>Profesores</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2">
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="caja_seleccion_profesores">
           <property name="title">
            <string/>
           </property>
@@ -75,26 +133,84 @@
             </widget>
            </item>
            <item>
-            <widget class="QListView" name="lista_profesores"/>
+            <widget class="QListWidget" name="lista_profesores"/>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QStackedWidget" name="datos_profesores">
-          <widget class="QWidget" name="page_5"/>
-          <widget class="QWidget" name="page_6"/>
+         <widget class="QGroupBox" name="caja_edicion_profesores">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QWidget" name="caja_nombre_profesores" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <item>
+               <widget class="QLabel" name="l_nombre">
+                <property name="text">
+                 <string>Nombre</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_nombre"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="caja_asignaciones_profesores" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <item>
+               <widget class="QLabel" name="l_asignaciones">
+                <property name="text">
+                 <string>Asignaciones</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_asignaciones"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="caja_disponibilidad_profesores" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <widget class="QLabel" name="l_disponibilidad">
+                <property name="text">
+                 <string>Disponibilidad</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_disponibilidad"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="b_guardar_profesores">
+             <property name="text">
+              <string>Guardar</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="ventana_horarios" native="true">
+      <widget class="QWidget" name="ventana_horarios">
        <attribute name="title">
         <string>Horarios</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
         <item>
-         <widget class="QGroupBox" name="caja_manejo_horarios">
+         <widget class="QGroupBox" name="caja_izquierda_horarios">
           <property name="title">
            <string/>
           </property>
@@ -118,7 +234,7 @@
                   <number>5</number>
                  </property>
                  <item>
-                  <widget class="QRadioButton" name="radioButton_2">
+                  <widget class="QRadioButton" name="b_cursos_horarios">
                    <property name="text">
                     <string>Cursos</string>
                    </property>
@@ -128,7 +244,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="radioButton">
+                  <widget class="QRadioButton" name="b_profesor_horarios">
                    <property name="text">
                     <string>Profesores</string>
                    </property>
@@ -138,7 +254,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QListView" name="lista_horarios"/>
+               <widget class="QListWidget" name="lista_horarios"/>
               </item>
              </layout>
             </widget>
@@ -147,11 +263,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="caja_derecha_horarios">
           <property name="title">
            <string/>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0">
+          <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,10">
            <item>
             <widget class="QGroupBox" name="caja_generacion_horarios">
              <property name="title">
@@ -159,7 +275,7 @@
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <spacer name="horizontalSpacer">
+               <spacer name="separador_horarios">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -172,7 +288,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton">
+               <widget class="QPushButton" name="b_generar_horarios">
                 <property name="text">
                  <string>Generar</string>
                 </property>
@@ -182,12 +298,19 @@
             </widget>
            </item>
            <item>
-            <widget class="QStackedWidget" name="datos_profesores_2">
-             <property name="currentIndex">
-              <number>1</number>
+            <widget class="QGroupBox" name="caja_ver_horarios">
+             <property name="title">
+              <string/>
              </property>
-             <widget class="QWidget" name="page_7"/>
-             <widget class="QWidget" name="page_8"/>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="l_horarios">
+                <property name="text">
+                 <string>Generando...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
@@ -204,7 +327,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>799</width>
      <height>24</height>
     </rect>
    </property>

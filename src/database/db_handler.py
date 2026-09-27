@@ -11,11 +11,12 @@ DB = ROOT / "data" / "GHE.db"
 # puedan validar columnas de forma genérica sin tener que tratar la PK
 # distinto en cada tabla.
 TABLAS = {
-    "Profesores": ("id_profesor", "nombre", "disponibilidad"),
+    "Profesores": ("id_profesor", "nombre"),
     "Cursos": ("id_curso", "nivel", "grado", "division"),
     "Materias": ("id_materia", "nombre"),
     "Horarios": ("id_horario", "id_profesor", "id_curso", "minuto_inicio", "minuto_fin"),
     "Asignaciones": ("id_asignacion", "id_profesor", "id_curso", "id_materia", "cantidad"),
+    "Disponibilidades": ("id_disponibilidad", "id_profesor", "minuto_inicio", "minuto_fin")
 }
 
 TABLAS_UI = [
@@ -42,8 +43,7 @@ def init_db():
 
             CREATE TABLE IF NOT EXISTS Profesores (
                 id_profesor INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                disponibilidad TEXT
+                nombre TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS Cursos (
@@ -72,6 +72,14 @@ def init_db():
                 minuto_fin INTEGER,
                 FOREIGN KEY (id_profesor) REFERENCES Profesores(id_profesor),
                 FOREIGN KEY (id_curso) REFERENCES Cursos(id_curso)
+            );
+
+            CREATE TABLE IF NOT EXISTS Disponibilidades (
+                id_disponibilidad INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_profesor INTEGER,
+                minuto_inicio INTEGER,
+                minuto_fin INTEGER,
+                FOREIGN KEY (id_profesor) REFERENCES Profesores(id_profesor)
             );
         """)
 

@@ -4,7 +4,6 @@ from PySide6.QtWidgets import (
 
 from src.database.db_handler import obtener_curso_por_texto
 from src.database.formatos import parsear_asignaciones
-from src.engine.availability import es_disponibilidad_valida
 
 
 class DialogoCurso(QDialog):
@@ -64,13 +63,9 @@ class DialogoProfesor(QDialog):
         self.input_asignaciones = QLineEdit(self)
         self.input_asignaciones.setPlaceholderText("Materia,Curso,Cantidad;Materia,Curso,Cantidad")
 
-        self.input_disponibilidad = QLineEdit(self)
-        self.input_disponibilidad.setPlaceholderText("08:00-09:30,13:00-14:00")
-
         formulario = QFormLayout()
         formulario.addRow("Nombre", self.input_nombre)
         formulario.addRow("Asignaciones", self.input_asignaciones)
-        formulario.addRow("Disponibilidad", self.input_disponibilidad)
 
         botones = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
@@ -101,18 +96,10 @@ class DialogoProfesor(QDialog):
                 )
                 return
 
-        if not es_disponibilidad_valida(self.input_disponibilidad.text()):
-            QMessageBox.warning(
-                self, "Disponibilidad inválida",
-                "Usá el formato HH:MM-HH:MM separando los bloques con comas."
-            )
-            return
-
         self.accept()
 
     def datos(self) -> dict:
         return {
             "nombre": self.input_nombre.text().strip(),
             "asignaciones": self.input_asignaciones.text().strip(),
-            "disponibilidad": self.input_disponibilidad.text().strip(),
         }

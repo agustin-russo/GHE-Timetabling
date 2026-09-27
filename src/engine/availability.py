@@ -12,11 +12,15 @@ Ejemplo: "08:00-09:30,13:00-14:00"
 """
 
 MINUTOS_POR_DIA = 24 * 60
-
-
-def hhmm_a_minutos(hhmm: str) -> int:
-    horas, minutos = hhmm.strip().split(":")
-    return int(horas) * 60 + int(minutos)
+DIAS_A_MINUTOS = {
+     "Lunes": 0,
+     "Martes": MINUTOS_POR_DIA,
+     "Miercoles": MINUTOS_POR_DIA * 2,
+     "Jueves": MINUTOS_POR_DIA * 3,
+     "Viernes": MINUTOS_POR_DIA * 4,
+     "Sabado": MINUTOS_POR_DIA * 5,
+     "Domingo": MINUTOS_POR_DIA * 6,
+}
 
 
 def minutos_a_hhmm(minutos: int) -> str:
@@ -24,37 +28,19 @@ def minutos_a_hhmm(minutos: int) -> str:
     return f"{minutos // 60:02d}:{minutos % 60:02d}"
 
 
-def parsear_disponibilidad(texto: str) -> list[tuple[int, int]]:
-    if not texto:
-        return []
-
-    bloques = []
-    for parte in texto.split(","):
-        parte = parte.strip()
-        if not parte:
-            continue
-
-        try:
-            inicio_str, fin_str = parte.split("-")
-            inicio, fin = hhmm_a_minutos(inicio_str), hhmm_a_minutos(fin_str)
-        except (ValueError, AttributeError):
-            raise ValueError(f"Bloque de disponibilidad inválido: '{parte}'")
-
-        if fin <= inicio:
-            raise ValueError(f"El bloque '{parte}' termina antes de empezar")
-
-        bloques.append((inicio, fin))
-
-    return bloques
+def minutos_a_dia(minutos: int) -> str:
+     dias = list(DIAS_A_MINUTOS.keys())
+     return dias[minutos // MINUTOS_POR_DIA]
 
 
 def formatear_disponibilidad(bloques: list[tuple[int, int]]) -> str:
     return ",".join(f"{minutos_a_hhmm(i)}-{minutos_a_hhmm(f)}" for i, f in bloques)
 
 
-def es_disponibilidad_valida(texto: str) -> bool:
-    try:
-        parsear_disponibilidad(texto)
-        return True
-    except ValueError:
-        return False
+def es_disponibilidad_valida(hora1, hora2, dia) -> tuple:
+    inicio, fin = (hora1.hour() * 60) + hora1.minute(), (hora2.hour() * 60) + hora2.minute()
+
+    if fin <= inicio:
+            return ()
+    
+    return (inicio + DIAS_A_MINUTOS[dia], fin + DIAS_A_MINUTOS[dia])

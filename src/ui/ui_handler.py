@@ -1,15 +1,39 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QDialog, QListWidgetItem, QMainWindow, QMessageBox
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QDialog, QListWidgetItem, QMainWindow, QMessageBox
 
 from src.ui.generated.ghe_main_window import Ui_MainWindow
 from src.ui.dialogs import DialogoCurso, DialogoProfesor
 from src.ui.schedule_widget import GrillaHorario
 
 from src.database.db_handler import (
-    select, insert, update, guardar_asignaciones, obtener_asignaciones_texto,
+    select, insert, update, delete, guardar_asignaciones, obtener_asignaciones_texto
 )
 from src.database.formatos import parsear_asignaciones
-from src.engine.availability import es_disponibilidad_valida
+from src.engine.availability import es_disponibilidad_valida, minutos_a_hhmm, minutos_a_dia
+
+
+class ItemDisponibilidadWidget(QWidget):
+
+    boton_apretado = Signal(tuple)
+
+    def __init__(self, object_id, container: QListWidgetItem, description, parent=None):
+        super().__init__(parent)
+
+        self.object_id = object_id
+        self.container = container
+        self.desc_label = QLabel(description)
+        self.action_button = QPushButton("X")
+
+        layout = QHBoxLayout(self)
+        layout.addWidget(self.desc_label)
+        layout.addStretch() # Pushes the button to the right side
+        layout.addWidget(self.action_button)
+        layout.setContentsMargins(5, 5, 5, 5)
+
+        self.action_button.clicked.connect(self.enviar_aviso)
+
+    def enviar_aviso(self):
+        self.boton_apretado.emit((self.object_id, self.container))
 
 
 class MainWindow(QMainWindow):
@@ -90,12 +114,58 @@ class MainWindow(QMainWindow):
     # Profesores
     # ------------------------------------------------------------------
 
+    def insertar_disponibilidad(self, id_disponibilidad, texto):
+        item = QListWidgetItem(self.ui.lista_disponibilidades)
+        row_widget = ItemDisponibilidadWidget(id_disponibilidad, item, texto)
+        row_widget.boton_apretado.connect(self.eliminar_disponibilidad)
+    
+        item.setSizeHint(row_widget.sizeHint())
+            
+        self.ui.lista_disponibilidades.addItem(item)
+        self.ui.lista_disponibilidades.setItemWidget(item, row_widget)
+
+
+    def eliminar_disponibilidad(self, data):
+        delete("Disponibilidades", {
+            "id_disponibilidad": data[0]
+        })
+
+        item_removido = self.ui.lista_disponibilidades.takeItem(self.ui.lista_disponibilidades.row(data[1]))
+        del item_removido
+    
+    
+    def agregar_disponibilidad(self):
+    
+        hora1 = self.ui.input_hora_inicio_disponibilidad.time()
+        hora2 = self.ui.input_hora_fin_disponibilidad.time()
+        dia = self.ui.cb_fechas_disponibilidad.currentText()
+    
+        disponibilidad = es_disponibilidad_valida(hora1, hora2, dia)
+    
+        if not disponibilidad:
+            QMessageBox.warning(
+                self, "Disponibilidad inválida",
+                "El bloque termina antes de empezar"
+                )
+            return
+    
+    
+        id_disponibilidad = insert("Disponibilidades", {
+            "id_profesor": self.id_profesor_actual,
+            "minuto_inicio": disponibilidad[0],
+            "minuto_fin": disponibilidad[1]
+        })
+    
+        self.insertar_disponibilidad(id_disponibilidad, f"{hora1.toString("hh:mm")} a {hora2.toString("hh:mm")} - {dia}")
+    
+
     def cargar_lista_profesores(self):
         self.ui.lista_profesores.clear()
         for fila in select("Profesores", ("id_profesor", "nombre")):
             item = QListWidgetItem(fila["nombre"])
             item.setData(Qt.ItemDataRole.UserRole, fila["id_profesor"])
             self.ui.lista_profesores.addItem(item)
+
 
     def agregar_profesor(self):
         dialogo = DialogoProfesor(self)
@@ -105,7 +175,6 @@ class MainWindow(QMainWindow):
         datos = dialogo.datos()
         id_profesor = insert("Profesores", {
             "nombre": datos["nombre"],
-            "disponibilidad": datos["disponibilidad"],
         })
 
         if datos["asignaciones"]:
@@ -132,8 +201,18 @@ class MainWindow(QMainWindow):
 
         fila = filas[0]
         self.ui.input_nombre.setText(fila["nombre"] or "")
-        self.ui.input_disponibilidad.setText(fila["disponibilidad"] or "")
         self.ui.input_asignaciones.setText(obtener_asignaciones_texto(self.id_profesor_actual))
+
+        dispos = select("Disponibilidades", None, {"id_profesor": self.id_profesor_actual})
+
+        self.ui.lista_disponibilidades.clear()
+        for fila in dispos:
+            hora1 = minutos_a_hhmm(fila["minuto_inicio"])
+            hora2 = minutos_a_hhmm(fila["minuto_fin"])
+            dia = minutos_a_dia(fila["minuto_fin"])
+
+            self.insertar_disponibilidad(fila["id_disponibilidad"], f"{hora1} a {hora2} - {dia}")
+
 
     def guardar_profesor(self):
         if self.id_profesor_actual is None:
@@ -141,19 +220,12 @@ class MainWindow(QMainWindow):
             return
 
         nombre = self.ui.input_nombre.text().strip()
-        texto_disponibilidad = self.ui.input_disponibilidad.text().strip()
         texto_asignaciones = self.ui.input_asignaciones.text().strip()
 
         if not nombre:
             QMessageBox.warning(self, "Datos incompletos", "Completá el nombre.")
             return
 
-        if not es_disponibilidad_valida(texto_disponibilidad):
-            QMessageBox.warning(
-                self, "Disponibilidad inválida",
-                "Usá el formato HH:MM-HH:MM separando los bloques con comas."
-            )
-            return
 
         try:
             asignaciones = parsear_asignaciones(texto_asignaciones)
@@ -163,7 +235,7 @@ class MainWindow(QMainWindow):
 
         update(
             "Profesores",
-            {"nombre": nombre, "disponibilidad": texto_disponibilidad},
+            {"nombre": nombre},
             {"id_profesor": self.id_profesor_actual},
         )
 
@@ -176,6 +248,7 @@ class MainWindow(QMainWindow):
         item = self.ui.lista_profesores.currentItem()
         if item is not None:
             item.setText(nombre)
+
 
     # ------------------------------------------------------------------
     # Horarios
@@ -246,6 +319,7 @@ class MainWindow(QMainWindow):
 
         self.ui.b_agregar_profesor.clicked.connect(self.agregar_profesor)
         self.ui.b_guardar_profesores.clicked.connect(self.guardar_profesor)
+        self.ui.b_agregar_disponibilidad.clicked.connect(self.agregar_disponibilidad)
 
         self.ui.b_generar_horarios.clicked.connect(self.generar_horarios)
         self.ui.b_cursos_horarios.toggled.connect(self.actualizar_lista_horarios)

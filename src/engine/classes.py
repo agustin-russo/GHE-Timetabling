@@ -62,11 +62,7 @@ class Teacher:
                 })
                 course.add_subject(interval)
 
-        # Los bloques de indisponibilidad se modelan como intervalos fijos
-        # más: no pertenecen a ninguna materia ni curso, pero al competir
-        # por el mismo espacio que las clases del profesor dentro del
-        # mismo grupo de "no overlap", el solver nunca va a poder ubicar
-        # una clase encima de ellos.
+
         for i, (inicio, fin) in enumerate(self.availability):
             bloqueo = model.new_fixed_size_interval_var(inicio, fin - inicio, f"bloqueo_{self.name}_{i}")
             self.intervals.append(bloqueo)

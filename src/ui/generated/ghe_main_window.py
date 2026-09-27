@@ -15,18 +15,18 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QListWidget, QListWidgetItem,
-    QMainWindow, QMenuBar, QPushButton, QRadioButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
+    QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
+    QTabWidget, QTimeEdit, QVBoxLayout, QWidget)
 import src.ui.generated.main_logos_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(799, 600)
         icon = QIcon()
         icon.addFile(u":/main/box.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -186,15 +186,79 @@ class Ui_MainWindow(object):
         self.caja_disponibilidad_profesores.setObjectName(u"caja_disponibilidad_profesores")
         self.horizontalLayout_11 = QHBoxLayout(self.caja_disponibilidad_profesores)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.l_disponibilidad = QLabel(self.caja_disponibilidad_profesores)
+        self.widget = QWidget(self.caja_disponibilidad_profesores)
+        self.widget.setObjectName(u"widget")
+        self.verticalLayout_8 = QVBoxLayout(self.widget)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_8.setContentsMargins(0, -1, -1, -1)
+        self.l_disponibilidad = QLabel(self.widget)
         self.l_disponibilidad.setObjectName(u"l_disponibilidad")
 
-        self.horizontalLayout_11.addWidget(self.l_disponibilidad)
+        self.verticalLayout_8.addWidget(self.l_disponibilidad)
 
-        self.input_disponibilidad = QLineEdit(self.caja_disponibilidad_profesores)
-        self.input_disponibilidad.setObjectName(u"input_disponibilidad")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.horizontalLayout_11.addWidget(self.input_disponibilidad)
+        self.verticalLayout_8.addItem(self.verticalSpacer)
+
+        self.verticalLayout_8.setStretch(0, 1)
+        self.verticalLayout_8.setStretch(1, 5)
+
+        self.horizontalLayout_11.addWidget(self.widget)
+
+        self.caja_edicion_disponibilidad = QWidget(self.caja_disponibilidad_profesores)
+        self.caja_edicion_disponibilidad.setObjectName(u"caja_edicion_disponibilidad")
+        self.verticalLayout_7 = QVBoxLayout(self.caja_edicion_disponibilidad)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.caja_agregar_disponibilidad = QWidget(self.caja_edicion_disponibilidad)
+        self.caja_agregar_disponibilidad.setObjectName(u"caja_agregar_disponibilidad")
+        self.horizontalLayout_14 = QHBoxLayout(self.caja_agregar_disponibilidad)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.label = QLabel(self.caja_agregar_disponibilidad)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_14.addWidget(self.label)
+
+        self.input_hora_inicio_disponibilidad = QTimeEdit(self.caja_agregar_disponibilidad)
+        self.input_hora_inicio_disponibilidad.setObjectName(u"input_hora_inicio_disponibilidad")
+        self.input_hora_inicio_disponibilidad.setTimeSpec(Qt.LocalTime)
+
+        self.horizontalLayout_14.addWidget(self.input_hora_inicio_disponibilidad)
+
+        self.label_2 = QLabel(self.caja_agregar_disponibilidad)
+        self.label_2.setObjectName(u"label_2")
+
+        self.horizontalLayout_14.addWidget(self.label_2)
+
+        self.input_hora_fin_disponibilidad = QTimeEdit(self.caja_agregar_disponibilidad)
+        self.input_hora_fin_disponibilidad.setObjectName(u"input_hora_fin_disponibilidad")
+
+        self.horizontalLayout_14.addWidget(self.input_hora_fin_disponibilidad)
+
+        self.cb_fechas_disponibilidad = QComboBox(self.caja_agregar_disponibilidad)
+        self.cb_fechas_disponibilidad.addItem("")
+        self.cb_fechas_disponibilidad.addItem("")
+        self.cb_fechas_disponibilidad.addItem("")
+        self.cb_fechas_disponibilidad.addItem("")
+        self.cb_fechas_disponibilidad.addItem("")
+        self.cb_fechas_disponibilidad.setObjectName(u"cb_fechas_disponibilidad")
+
+        self.horizontalLayout_14.addWidget(self.cb_fechas_disponibilidad)
+
+        self.b_agregar_disponibilidad = QPushButton(self.caja_agregar_disponibilidad)
+        self.b_agregar_disponibilidad.setObjectName(u"b_agregar_disponibilidad")
+
+        self.horizontalLayout_14.addWidget(self.b_agregar_disponibilidad)
+
+
+        self.verticalLayout_7.addWidget(self.caja_agregar_disponibilidad)
+
+        self.lista_disponibilidades = QListWidget(self.caja_edicion_disponibilidad)
+        self.lista_disponibilidades.setObjectName(u"lista_disponibilidades")
+
+        self.verticalLayout_7.addWidget(self.lista_disponibilidades)
+
+
+        self.horizontalLayout_11.addWidget(self.caja_edicion_disponibilidad)
 
 
         self.verticalLayout_6.addWidget(self.caja_disponibilidad_profesores)
@@ -300,7 +364,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 24))
+        self.menubar.setGeometry(QRect(0, 0, 799, 24))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -330,6 +394,17 @@ class Ui_MainWindow(object):
         self.l_nombre.setText(QCoreApplication.translate("MainWindow", u"Nombre", None))
         self.l_asignaciones.setText(QCoreApplication.translate("MainWindow", u"Asignaciones", None))
         self.l_disponibilidad.setText(QCoreApplication.translate("MainWindow", u"Disponibilidad", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"De", None))
+        self.input_hora_inicio_disponibilidad.setDisplayFormat(QCoreApplication.translate("MainWindow", u"h:mm", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"a", None))
+        self.input_hora_fin_disponibilidad.setDisplayFormat(QCoreApplication.translate("MainWindow", u"h:mm", None))
+        self.cb_fechas_disponibilidad.setItemText(0, QCoreApplication.translate("MainWindow", u"Lunes", None))
+        self.cb_fechas_disponibilidad.setItemText(1, QCoreApplication.translate("MainWindow", u"Martes", None))
+        self.cb_fechas_disponibilidad.setItemText(2, QCoreApplication.translate("MainWindow", u"Miercoles", None))
+        self.cb_fechas_disponibilidad.setItemText(3, QCoreApplication.translate("MainWindow", u"Jueves", None))
+        self.cb_fechas_disponibilidad.setItemText(4, QCoreApplication.translate("MainWindow", u"Viernes", None))
+
+        self.b_agregar_disponibilidad.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.b_guardar_profesores.setText(QCoreApplication.translate("MainWindow", u"Guardar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.ventana_profesores), QCoreApplication.translate("MainWindow", u"Profesores", None))
         self.caja_izquierda_horarios.setTitle("")

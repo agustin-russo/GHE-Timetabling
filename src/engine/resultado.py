@@ -1,7 +1,5 @@
 """
-Envuelve la salida de Solver.solve() en objetos simples que la UI (o
-el controlador) puede recorrer sin saber nada de ortools ni de cómo
-está armado el modelo del motor.
+Envuelve la salida de Solver.solve() en objetos simples
 """
 
 from dataclasses import dataclass

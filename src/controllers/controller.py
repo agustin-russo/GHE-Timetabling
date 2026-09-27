@@ -5,7 +5,6 @@ este controlador y recibe un ResultadoHorario ya armado.
 """
 
 from src.database.db_handler import select
-from src.engine.availability import parsear_disponibilidad
 from src.engine.classes import Course, Teacher
 from src.engine.solver import Solver
 from src.engine.resultado import ResultadoHorario, MINUTOS_POR_DIA
@@ -34,17 +33,16 @@ def _horarios_de_inicio_posibles():
     return posibles
 
 
-def _disponibilidad_semanal(texto_disponibilidad):
+def _disponibilidades(id_profesor):
     """
-    Convierte el texto de un profesor en bloqueos repetidos los 5 días
-    (ver el aviso en el README/resumen sobre esta simplificación).
+    Recolecta todas las disponibilidades de un profesor
     """
-    bloques = parsear_disponibilidad(texto_disponibilidad)
     semanal = []
-    for dia in range(DIAS_HABILES):
-        offset = dia * MINUTOS_POR_DIA
-        for inicio, fin in bloques:
-            semanal.append((offset + inicio, offset + fin))
+    disponibilidades = select("Disponibilidades", ["minuto_inicio", "minuto_fin"], {"id_profesor": id_profesor})
+
+    for fila in disponibilidades:
+        semanal.append((fila["minuto_inicio"], fila["minuto_fin"]))
+
     return semanal
 
 
@@ -89,7 +87,7 @@ class GHEController:
                     "start_times": inicios_posibles,
                 })
 
-            disponibilidad = _disponibilidad_semanal(fila_p["disponibilidad"] or "")
+            disponibilidad = _disponibilidades(fila_p["id_profesor"])
             teachers.append(Teacher(fila_p["nombre"], assignments, disponibilidad))
 
         solver = Solver(list(cursos.values()), teachers)
